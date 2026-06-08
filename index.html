@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suyash Mhetre — Data Scientist</title>
+  <meta name="description" content="Data Scientist with 4+ years experience in ML, predictive modeling, and enterprise-scale data systems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #080b10;
+      --bg2:      #0d1117;
+      --bg3:      #111722;
+      --border:   #1c2333;
+      --accent:   #00d4aa;
+      --accent2:  #3b82f6;
+      --accent3:  #f59e0b;
+      --text:     #e6edf3;
+      --muted:    #7d8590;
+      --subtle:   #21262d;
+      --mono:     'IBM Plex Mono', monospace;
+      --sans:     'IBM Plex Sans', sans-serif;
+      --display:  'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      background: rgba(8,11,16,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: .05em;
+    }
+
+    .nav-logo span { color: var(--muted); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0 3rem;
+    }
+
+    .hero-inner { max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--text);
+      margin-bottom: .5rem;
+    }
+
+    .hero-accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 580px;
+      margin: 1.5rem 0 2.5rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { border-left: 2px solid var(--accent); padding-left: 1rem; }
+    .stat-num { font-family: var(--display); font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 4px; }
+
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: .75rem 1.75rem;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .05em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all .2s;
+    }
+    .btn-primary:hover { background: #00f0c0; transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: .75rem 1.75rem;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .05em;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* ── SECTION HEADER ── */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); }
+
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .about-text p strong { color: var(--text); font-weight: 500; }
+
+    .about-details { display: flex; flex-direction: column; gap: 1rem; }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 1rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .detail-icon { font-size: 18px; width: 36px; text-align: center; }
+    .detail-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .detail-val { font-size: 14px; color: var(--text); font-weight: 400; }
+    .detail-val a { color: var(--accent); text-decoration: none; }
+    .detail-val a:hover { text-decoration: underline; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .skill-card-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .skill-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 3px 10px;
+      background: var(--subtle);
+      color: var(--text);
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .skill-tag.accent { background: rgba(0,212,170,.1); color: var(--accent); border-color: rgba(0,212,170,.3); }
+
+    /* ── EXPERIENCE ── */
+    .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .exp-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem 2rem;
+      position: relative;
+      transition: border-color .2s;
+    }
+    .exp-card:hover { border-color: var(--accent2); }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 10px 0 0 10px;
+    }
+    .exp-card.past::before { background: var(--muted); }
+
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+
+    .exp-title { font-family: var(--display); font-size: 1.1rem; font-weight: 600; color: var(--text); }
+    .exp-company { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-top: 3px; }
+    .exp-date { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; white-space: nowrap; }
+
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+    .exp-bullets li {
+      font-size: 14px;
+      color: var(--muted);
+      padding-left: 1.25rem;
+      position: relative;
+      line-height: 1.7;
+    }
+    .exp-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 11px; top: 4px; }
+    .exp-bullets li strong { color: var(--text); font-weight: 500; }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color .2s, transform .2s;
+      text-decoration: none;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+    .project-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .project-icon { font-size: 24px; }
+    .project-links { display: flex; gap: 8px; }
+    .project-link {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all .15s;
+    }
+    .project-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    .project-title { font-family: var(--display); font-size: 1.1rem; font-weight: 600; color: var(--text); }
+    .project-desc { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; }
+
+    .project-stack { display: flex; flex-wrap: wrap; gap: 5px; }
+    .stack-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      background: rgba(59,130,246,.12);
+      color: var(--accent2);
+      border-radius: 3px;
+      border: 1px solid rgba(59,130,246,.2);
+    }
+
+    .project-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      background: rgba(0,212,170,.1);
+      color: var(--accent);
+      border-radius: 3px;
+      border: 1px solid rgba(0,212,170,.25);
+      width: fit-content;
+    }
+
+    /* ── EDUCATION ── */
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .edu-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color .2s;
+    }
+    .edu-card:hover { border-color: var(--accent3); }
+
+    .edu-degree { font-family: var(--display); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .edu-school { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+    .edu-year { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .edu-note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+
+    .contact-box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem;
+    }
+
+    .contact-box p { color: var(--muted); margin-bottom: 2rem; line-height: 1.8; }
+
+    .contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+
+    .contact-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: .75rem 1.5rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      transition: all .2s;
+    }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .contact-link .icon { font-size: 16px; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    .stagger-1 { transition-delay: .1s; }
+    .stagger-2 { transition-delay: .2s; }
+    .stagger-3 { transition-delay: .3s; }
+    .stagger-4 { transition-delay: .4s; }
+
+    /* ── TERMINAL CURSOR ── */
+    .cursor {
+      display: inline-block;
+      width: 10px; height: 1.1em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 4px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      #hero { padding: 0 1.25rem; }
+      section { padding: 4rem 1.25rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.5rem; }
+      h1 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo"><span>~/</span>suyash-mhetre</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag fade-up">Data Scientist · Salt Lake City, UT</div>
+    <h1 class="fade-up stagger-1">
+      Suyash<br>
+      <span class="hero-accent">Mhetre</span><span class="cursor"></span>
+    </h1>
+    <p class="hero-sub fade-up stagger-2">
+      Building ML systems and predictive models at enterprise scale.
+      4+ years turning complex financial data into decisions that matter —
+      from <strong>$58.5B loan portfolios</strong> to real-time transaction classifiers.
+    </p>
+    <div class="hero-stats fade-up stagger-3">
+      <div class="stat-item">
+        <div class="stat-num">$58.5B</div>
+        <div class="stat-label">Portfolio Modeled</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">50%</div>
+        <div class="stat-label">RMSE Reduction</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">160+</div>
+        <div class="stat-label">Features Engineered</div>
+      </div>
+    </div>
+    <div class="hero-ctas fade-up stagger-4">
+      <a href="#projects" class="btn-primary">↓ View Projects</a>
+      <a href="mailto:mhetresuyash7@gmail.com" class="btn-ghost">✉ Get in Touch</a>
+      <a href="#" class="btn-ghost" download>↓ Resume</a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-label">01 &mdash; About</div>
+  <h2>Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text fade-up">
+      <p>I'm a <strong>Data Scientist</strong> with 4+ years of experience building and deploying machine learning and predictive models at enterprise scale, currently at <strong>Zions Bancorporation</strong> in Salt Lake City.</p>
+      <p>My work spans the full ML lifecycle — from raw data pipelines and feature engineering to model validation, production monitoring, and GCP-deployed dashboards. I've built everything from <strong>loan prepayment forecasting models</strong> supporting $58.5B in assets to <strong>active learning transaction classifiers</strong> with human-in-the-loop retraining.</p>
+      <p>I'm currently targeting <strong>Data Scientist roles at big tech</strong> where I can apply statistical rigor and engineering discipline to consumer-scale problems. When I'm not modeling, I'm building portfolio projects in Python — currently working on an Uber demand forecasting system using NYC TLC trip data.</p>
+    </div>
+    <div class="about-details fade-up stagger-2">
+      <div class="detail-row">
+        <div class="detail-icon">📍</div>
+        <div>
+          <div class="detail-label">Location</div>
+          <div class="detail-val">Salt Lake City, Utah, US</div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">💼</div>
+        <div>
+          <div class="detail-label">Current Role</div>
+          <div class="detail-val">Data Scientist @ Zions Bancorporation</div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">🎓</div>
+        <div>
+          <div class="detail-label">Education</div>
+          <div class="detail-val">M.S. Information Management · Utah State University</div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">✉</div>
+        <div>
+          <div class="detail-label">Email</div>
+          <div class="detail-val"><a href="mailto:mhetresuyash7@gmail.com">mhetresuyash7@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">🔗</div>
+        <div>
+          <div class="detail-label">LinkedIn</div>
+          <div class="detail-val"><a href="https://www.linkedin.com/in/suyashmhetre/" target="_blank">linkedin.com/in/suyashmhetre</a></div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">💻</div>
+        <div>
+          <div class="detail-label">GitHub</div>
+          <div class="detail-val"><a href="https://github.com/suyash07" target="_blank">github.com/suyash07</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="section-label">02 &mdash; Skills</div>
+  <h2>Technical Stack</h2>
+  <div class="skills-grid">
+    <div class="skill-card fade-up">
+      <div class="skill-card-title">⬡ Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag accent">Python</span>
+        <span class="skill-tag accent">R</span>
+        <span class="skill-tag accent">SQL</span>
+        <span class="skill-tag">SAS Studio</span>
+      </div>
+    </div>
+    <div class="skill-card fade-up stagger-1">
+      <div class="skill-card-title">⬡ ML &amp; Modeling</div>
+      <div class="skill-tags">
+        <span class="skill-tag accent">scikit-learn</span>
+        <span class="skill-tag accent">XGBoost</span>
+        <span class="skill-tag">SGD Classifier</span>
+        <span class="skill-tag">Random Forests</span>
+        <span class="skill-tag">GLM / Fractional Response</span>
+        <span class="skill-tag">Time Series</span>
+        <span class="skill-tag">Active Learning</span>
+        <span class="skill-tag">Incremental Learning</span>
+      </div>
+    </div>
+    <div class="skill-card fade-up stagger-2">
+      <div class="skill-card-title">⬡ Model Evaluation</div>
+      <div class="skill-tags">
+        <span class="skill-tag">RMSE · MASE · MAE · MAPE</span>
+        <span class="skill-tag">ROC-AUC · F1-score</span>
+        <span class="skill-tag">Cross-validation</span>
+        <span class="skill-tag">Backtesting</span>
+        <span class="skill-tag">Prediction Intervals</span>
+        <span class="skill-tag">A/B Testing</span>
+        <span class="skill-tag">Hypothesis Testing</span>
+      </div>
+    </div>
+    <div class="skill-card fade-up stagger-1">
+      <div class="skill-card-title">⬡ Data &amp; Engineering</div>
+      <div class="skill-tags">
+        <span class="skill-tag accent">pandas</span>
+        <span class="skill-tag accent">NumPy</span>
+        <span class="skill-tag">statsmodels</span>
+        <span class="skill-tag">ETL Pipelines</span>
+        <span class="skill-tag">YAML Orchestration</span>
+        <span class="skill-tag">Greenplum / Postgres</span>
+        <span class="skill-tag">Git</span>
+      </div>
+    </div>
+    <div class="skill-card fade-up stagger-2">
+      <div class="skill-card-title">⬡ Cloud &amp; DevOps</div>
+      <div class="skill-tags">
+        <span class="skill-tag accent">GCP (Cloud Run)</span>
+        <span class="skill-tag accent">Azure DevOps</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">CI/CD</span>
+      </div>
+    </div>
+    <div class="skill-card fade-up stagger-3">
+      <div class="skill-card-title">⬡ Visualization &amp; Dashboards</div>
+      <div class="skill-tags">
+        <span class="skill-tag accent">R Shiny</span>
+        <span class="skill-tag accent">Python Dash</span>
+        <span class="skill-tag">Plotly</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">ggplot2</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="section-label">03 &mdash; Experience</div>
+  <h2>Work History</h2>
+  <div class="exp-list">
+
+    <div class="exp-card fade-up">
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">Data Scientist / Quantitative Modeling Analyst</div>
+          <div class="exp-company">Zions Bancorporation · Salt Lake City, UT</div>
+        </div>
+        <div class="exp-date">July 2021 — Present</div>
+      </div>
+      <ul class="exp-bullets">
+        <li>Developed and validated loan prepayment models for <strong>20+ segments</strong> using OLS and Fractional Response Regression, supporting CECL compliance and stress testing for a <strong>$58.5B+ portfolio</strong> — reducing RMSE by up to <strong>50%</strong> over legacy systems.</li>
+        <li>Built a customer transaction classification system using <strong>SGD Classifier (scikit-learn)</strong> with a human-in-the-loop active learning feedback loop — surfacing top-3 alternative categories on low-confidence predictions and retraining via <strong>partial_fit()</strong>.</li>
+        <li>Engineered feature selection pipelines for <strong>160+ macroeconomic variables</strong> including lag transforms, QoQ/YoY growth features, and piecewise linear regression.</li>
+        <li>Implemented production model monitoring using <strong>±2σ prediction intervals</strong>, rolling 6-month windows, and breach detection logic (3 consecutive violations).</li>
+        <li>Built and deployed <strong>R Shiny and Python Dash dashboards on GCP</strong> for stakeholder self-serve reporting; designed YAML-based ETL pipelines and managed codebase via Azure DevOps.</li>
+        <li>Designed scalable SQL, R, and Python data pipelines processing <strong>37,000+ loan records</strong> from 2008–2024 with automated data quality checks.</li>
+        <li>Contributed to executive reporting and regulatory submissions under <strong>MRM and audit standards</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="exp-card past fade-up stagger-1">
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">Graduate Research Assistant (Part-Time)</div>
+          <div class="exp-company">Utah State University · Logan, UT</div>
+        </div>
+        <div class="exp-date">Sept 2019 — May 2021</div>
+      </div>
+      <ul class="exp-bullets">
+        <li>Designed a genomic SSR database (<strong>~1M rows</strong>) using SQL for genome prediction across 7 farm animal species.</li>
+        <li>Built a supporting <strong>ASP.NET MVC (C#)</strong> web application for genome annotation and prediction workflows.</li>
+      </ul>
+    </div>
+
+    <div class="exp-card past fade-up stagger-2">
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">Software Engineer</div>
+          <div class="exp-company">Johnson Controls · India &amp; Milwaukee, WI</div>
+        </div>
+        <div class="exp-date">Aug 2017 — Jun 2019</div>
+      </div>
+      <ul class="exp-bullets">
+        <li>Built an indoor navigation solution that became a <strong>key product selling point</strong>; processed mobile sensor data via APIs.</li>
+        <li>Collaborated in a 30-member Agile team; mentored <strong>4 graduate trainees</strong> on Android development and Azure authentication.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="section-label">04 &mdash; Projects</div>
+  <h2>Featured Work</h2>
+  <div class="projects-grid">
+
+    <div class="project-card fade-up">
+      <div class="project-header">
+        <div class="project-icon">🚕</div>
+        <div class="project-links">
+          <a href="https://github.com/suyash07" class="project-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="project-badge">🔨 In Progress · 2025</div>
+      <div class="project-title">Uber Demand Forecasting &amp; Surge Pricing</div>
+      <div class="project-desc">End-to-end ML pipeline on 3M+ real NYC Uber/Lyft trips predicting hourly ride demand by zone. XGBoost model with temporal, lag, rolling, and weather features. Surge pricing classifier with active learning feedback loop.</div>
+      <div class="project-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">XGBoost</span>
+        <span class="stack-tag">scikit-learn</span>
+        <span class="stack-tag">Plotly Dash</span>
+        <span class="stack-tag">GCP Cloud Run</span>
+        <span class="stack-tag">Open-Meteo API</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-up stagger-1">
+      <div class="project-header">
+        <div class="project-icon">💳</div>
+        <div class="project-links">
+          <a href="https://github.com/suyash07" class="project-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="project-badge">✦ Deployed at Zions · 2025</div>
+      <div class="project-title">Transaction Categorization ML System</div>
+      <div class="project-desc">Supervised SGD Classifier pipeline to auto-label customer spending (groceries, entertainment, utilities) with confidence-based flagging and a human-in-the-loop active learning loop — retraining incrementally via partial_fit().</div>
+      <div class="project-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">scikit-learn</span>
+        <span class="stack-tag">SGD Classifier</span>
+        <span class="stack-tag">Active Learning</span>
+        <span class="stack-tag">partial_fit()</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-up stagger-2">
+      <div class="project-header">
+        <div class="project-icon">📉</div>
+        <div class="project-links">
+          <span class="project-link">Zions Internal</span>
+        </div>
+      </div>
+      <div class="project-badge">✦ Production · Zions Bancorporation</div>
+      <div class="project-title">Loan Prepayment Forecasting Model</div>
+      <div class="project-desc">Prepayment forecasting using OLS and fractional response regression across 20+ segments on 2008–2024 data. Includes ±2σ monitoring, ±5%/±1% breach thresholds, and consecutive-breach detection logic for MRM escalation.</div>
+      <div class="project-stack">
+        <span class="stack-tag">R</span>
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">OLS</span>
+        <span class="stack-tag">Fractional Response</span>
+        <span class="stack-tag">Empyrean</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-up stagger-3">
+      <div class="project-header">
+        <div class="project-icon">💰</div>
+        <div class="project-links">
+          <span class="project-link">Zions Internal</span>
+        </div>
+      </div>
+      <div class="project-badge">✦ Production · Zions Bancorporation</div>
+      <div class="project-title">Loan Pricing Model</div>
+      <div class="project-desc">Segment-level pricing models (linear, autoregressive, benchmark) selected via 12-month out-of-sample RMSE and MASE. Achieved R² up to 0.96 and RMSE as low as 0.10. Monitored with CI-MASE distance metric √(CI²+MASE²).</div>
+      <div class="project-stack">
+        <span class="stack-tag">R</span>
+        <span class="stack-tag">Time Series</span>
+        <span class="stack-tag">MASE</span>
+        <span class="stack-tag">Prediction Intervals</span>
+        <span class="stack-tag">MRM Compliance</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="section-label">05 &mdash; Education</div>
+  <h2>Academic Background</h2>
+  <div class="edu-grid">
+    <div class="edu-card fade-up">
+      <div class="edu-degree">M.S. Information Management (STEM)</div>
+      <div class="edu-school">Utah State University · Logan, UT</div>
+      <div class="edu-year">2019 — 2021</div>
+      <div class="edu-note">Specialization: Data Analytics · Courses: Econometrics, Statistical Learning &amp; Data Mining, SAS Predictive Analysis, Data Science Incubator</div>
+    </div>
+    <div class="edu-card fade-up stagger-1">
+      <div class="edu-degree">B.E. Computer Science</div>
+      <div class="edu-school">University of Pune · India</div>
+      <div class="edu-year">2013 — 2017</div>
+      <div class="edu-note">Foundation in algorithms, data structures, software engineering, and mobile development.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-label" style="justify-content:center;">06 &mdash; Contact</div>
+  <h2 style="text-align:center;">Let's Connect</h2>
+  <div class="contact-box fade-up">
+    <p>I'm actively looking for <strong style="color:var(--text)">Data Scientist roles at big tech</strong>. If you're hiring or want to collaborate on a project, I'd love to hear from you.</p>
+    <div class="contact-links">
+      <a href="mailto:mhetresuyash7@gmail.com" class="contact-link">
+        <span class="icon">✉</span> mhetresuyash7@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/suyashmhetre/" target="_blank" class="contact-link">
+        <span class="icon">💼</span> LinkedIn
+      </a>
+      <a href="https://github.com/suyash07" target="_blank" class="contact-link">
+        <span class="icon">💻</span> GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>Suyash Mhetre · Data Scientist · Salt Lake City, UT &nbsp;·&nbsp; Built with HTML/CSS/JS &nbsp;·&nbsp; <a href="https://github.com/suyash07" style="color:var(--accent);text-decoration:none;" target="_blank">View source ↗</a></p>
+</footer>
+
+<script>
+  // Intersection observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Active nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
