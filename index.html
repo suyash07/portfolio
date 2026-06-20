@@ -314,6 +314,22 @@
       align-items: start;
     }
 
+    .about-photo-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-xl);
+    }
+
+    .about-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--hairline);
+      flex-shrink: 0;
+    }
+
     .about-text p {
       font-size: 16px;
       line-height: 1.5;
@@ -787,6 +803,9 @@
     </div>
     <div class="about-grid">
       <div class="about-text fade-up">
+        <div class="about-photo-wrap">
+          <img src="avatar.PNG" alt="Suyash Mhetre" class="about-avatar" />
+        </div>
         <p>I'm a <strong>Data Scientist</strong> with 4+ years of experience building and deploying machine learning and predictive models at enterprise scale, currently at <strong>Zions Bancorporation</strong> in Salt Lake City.</p>
         <p>My work spans the full ML lifecycle — from raw data pipelines and feature engineering to model validation, production monitoring, and GCP-deployed dashboards. I've built everything from <strong>loan prepayment forecasting models</strong> supporting $58.5B in assets to <strong>active learning transaction classifiers</strong> with human-in-the-loop retraining.</p>
         <p>I'm targeting <strong>Data Scientist roles at big tech</strong> where I can apply statistical rigor and engineering discipline to consumer-scale problems. When I'm not modeling, I'm building portfolio projects in Python — currently working on an Uber demand forecasting system using NYC TLC trip data.</p>
