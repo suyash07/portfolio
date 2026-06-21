@@ -264,6 +264,7 @@
     <a href="#section-a" class="tab-pill active">A · Pizza Metrics</a>
     <a href="#section-b" class="tab-pill">B · Runner Experience</a>
     <a href="#section-c" class="tab-pill">C · Ingredient Optimisation</a>
+    <a href="#section-d" class="tab-pill">D · Pricing &amp; Ratings</a>
   </div>
 
   <article class="post-body">
@@ -706,9 +707,150 @@ split_orders <span class="kw">AS</span> (
       <p><strong><code>STRING_AGG(DISTINCT ..., ', ')</code> + <code>COALESCE(prefix || agg, '')</code></strong> — this combination is the standard way to build dynamic comma-separated labels in PostgreSQL. <code>COALESCE</code> suppresses the prefix entirely when there are no values, so you never get "Meat Lovers - Exclude " with a trailing empty clause.</p>
     </div>
 
+    <!-- SECTION D -->
+    <h2 class="section-heading" id="section-d">Section D: Pricing &amp; Ratings</h2>
+    <p class="section-sub">5 questions on revenue calculation, surcharge logic, schema design, and net profit after runner costs. This section combines conditional aggregation with multi-CTE arithmetic — and includes a schema design question that has no single right answer.</p>
+
+    <!-- D1 -->
+    <h2><span class="q-number">D1</span> Total revenue — no delivery fees, no extras charge</h2>
+    <p>Fixed prices: Meatlovers = $12, Vegetarian = $10. Join to get the pizza name, filter to delivered orders only (<code>distance != 0</code>), and use <code>CASE WHEN</code> inside <code>SUM</code> to apply the right price per row.</p>
+    <div class="code-block">
+      <div class="code-label">SQL <span>D1</span></div>
+      <pre><span class="kw">SELECT</span>
+    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> pizza_name = <span class="st">'Meatlovers'</span> <span class="kw">THEN</span> <span class="st">12</span> <span class="kw">ELSE</span> <span class="st">10</span> <span class="kw">END</span>) <span class="kw">AS</span> total_revenue
+<span class="kw">FROM</span> customer_orders <span class="kw">AS</span> cust
+<span class="kw">JOIN</span> runner_orders <span class="kw">AS</span> runna
+    <span class="kw">ON</span> cust.order_id = runna.order_id
+<span class="kw">JOIN</span> pizza_names <span class="kw">AS</span> pizza
+    <span class="kw">ON</span> cust.pizza_id = pizza.pizza_id
+<span class="kw">WHERE</span> distance != <span class="st">0</span>;</pre>
+    </div>
+    <table class="result-table">
+      <thead><tr><th>total_revenue</th></tr></thead>
+      <tbody><tr><td>$138</td></tr></tbody>
+    </table>
+
+    <!-- D2 -->
+    <h2><span class="q-number">D2</span> Revenue with $1 surcharge per extra topping</h2>
+    <p>Now extras cost $1 each. The trick is counting the number of items in the comma-separated <code>extras</code> string — <code>array_length(string_to_array(extras, ','), 1)</code> gives the count. The <code>NULLIF</code> chain first normalises empty/null extras to NULL so they don't get counted.</p>
+    <div class="code-block">
+      <div class="code-label">SQL <span>D2</span></div>
+      <pre><span class="kw">WITH</span> orders <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="kw">CASE WHEN</span> pizza_name = <span class="st">'Meatlovers'</span> <span class="kw">THEN</span> <span class="st">12</span> <span class="kw">ELSE</span> <span class="st">10</span> <span class="kw">END</span> <span class="kw">AS</span> base_price,
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> <span class="fn">NULLIF</span>(<span class="fn">NULLIF</span>(<span class="fn">TRIM</span>(cust.extras), <span class="st">'null'</span>), <span class="st">''</span>) <span class="kw">IS NULL</span>
+                <span class="kw">THEN</span> <span class="st">0</span>
+            <span class="kw">ELSE</span> <span class="fn">array_length</span>(<span class="fn">string_to_array</span>(cust.extras, <span class="st">','</span>), <span class="st">1</span>)
+        <span class="kw">END</span> <span class="kw">AS</span> extras_surcharge
+    <span class="kw">FROM</span> customer_orders <span class="kw">AS</span> cust
+    <span class="kw">JOIN</span> runner_orders <span class="kw">AS</span> runna
+        <span class="kw">ON</span> cust.order_id = runna.order_id
+    <span class="kw">JOIN</span> pizza_names <span class="kw">AS</span> pizza
+        <span class="kw">ON</span> cust.pizza_id = pizza.pizza_id
+    <span class="kw">WHERE</span> distance != <span class="st">0</span>
+)
+<span class="kw">SELECT</span> <span class="fn">SUM</span>(base_price + extras_surcharge) <span class="kw">AS</span> total_revenue
+<span class="kw">FROM</span> orders;</pre>
+    </div>
+    <div class="insight">
+      <p><strong><code>array_length(string_to_array(col, ','), 1)</code></strong> — the cleanest way to count comma-separated items in PostgreSQL without exploding rows. <code>string_to_array</code> splits the string into an array; <code>array_length(..., 1)</code> returns the length of the first dimension.</p>
+    </div>
+
+    <!-- D3 -->
+    <h2><span class="q-number">D3</span> Design a runner ratings table</h2>
+    <p>This is a schema design question — there's no single right answer, but the key constraints are: one rating per successful order, rating between 1 and 5, and it should join cleanly to <code>runner_orders</code> on <code>order_id</code>.</p>
+    <div class="code-block">
+      <div class="code-label">SQL <span>D3 — schema + sample data</span></div>
+      <pre><span class="kw">CREATE TABLE</span> runner_ratings (
+    rating_id     SERIAL        <span class="kw">PRIMARY KEY</span>,
+    order_id      INTEGER       <span class="kw">NOT NULL</span>,
+    runner_id     INTEGER       <span class="kw">NOT NULL</span>,
+    customer_id   INTEGER       <span class="kw">NOT NULL</span>,
+    rating        INTEGER       <span class="kw">NOT NULL CHECK</span> (rating <span class="kw">BETWEEN</span> <span class="st">1</span> <span class="kw">AND</span> <span class="st">5</span>),
+    rated_at      TIMESTAMP     <span class="kw">DEFAULT NOW</span>()
+);
+
+<span class="cm">-- Sample ratings for successful deliveries</span>
+<span class="kw">INSERT INTO</span> runner_ratings (order_id, runner_id, customer_id, rating)
+<span class="kw">VALUES</span>
+    (<span class="st">1</span>,  <span class="st">1</span>, <span class="st">101</span>, <span class="st">5</span>),
+    (<span class="st">2</span>,  <span class="st">1</span>, <span class="st">101</span>, <span class="st">4</span>),
+    (<span class="st">3</span>,  <span class="st">1</span>, <span class="st">102</span>, <span class="st">4</span>),
+    (<span class="st">4</span>,  <span class="st">2</span>, <span class="st">103</span>, <span class="st">2</span>),
+    (<span class="st">5</span>,  <span class="st">3</span>, <span class="st">104</span>, <span class="st">5</span>),
+    (<span class="st">7</span>,  <span class="st">2</span>, <span class="st">105</span>, <span class="st">3</span>),
+    (<span class="st">8</span>,  <span class="st">2</span>, <span class="st">102</span>, <span class="st">4</span>),
+    (<span class="st">10</span>, <span class="st">1</span>, <span class="st">104</span>, <span class="st">5</span>);</pre>
+    </div>
+    <p>The <code>CHECK (rating BETWEEN 1 AND 5)</code> constraint enforces valid ratings at the database level — no application-side validation needed. Orders 6 and 9 are excluded as they were cancelled.</p>
+
+    <!-- D4 -->
+    <h2><span class="q-number">D4</span> Full delivery summary table</h2>
+    <p>Join everything together: customer info, runner info, rating, timing, speed, and pizza count per order — one row per successful delivery.</p>
+    <div class="code-block">
+      <div class="code-label">SQL <span>D4</span></div>
+      <pre><span class="kw">SELECT</span>
+    cust.customer_id,
+    cust.order_id,
+    runna.runner_id,
+    rr.rating,
+    cust.order_time,
+    runna.pickup_time,
+    <span class="fn">ROUND</span>(<span class="fn">EXTRACT</span>(<span class="cl">EPOCH FROM</span>
+        (runna.pickup_time::timestamp - cust.order_time::timestamp)
+    ) / <span class="st">60</span>)                                        <span class="kw">AS</span> mins_to_pickup,
+    runna.duration                                   <span class="kw">AS</span> delivery_duration_mins,
+    <span class="fn">ROUND</span>((runna.distance / runna.duration) * <span class="st">60</span>)   <span class="kw">AS</span> avg_speed_kmh,
+    <span class="fn">COUNT</span>(cust.pizza_id)                             <span class="kw">AS</span> total_pizzas
+<span class="kw">FROM</span> customer_orders <span class="kw">AS</span> cust
+<span class="kw">JOIN</span> runner_orders <span class="kw">AS</span> runna
+    <span class="kw">ON</span> cust.order_id = runna.order_id
+<span class="kw">JOIN</span> runner_ratings <span class="kw">AS</span> rr
+    <span class="kw">ON</span> cust.order_id = rr.order_id
+<span class="kw">WHERE</span> runna.distance != <span class="st">0</span>
+<span class="kw">GROUP BY</span>
+    cust.customer_id, cust.order_id, runna.runner_id,
+    rr.rating, cust.order_time, runna.pickup_time,
+    runna.duration, runna.distance
+<span class="kw">ORDER BY</span> cust.order_id;</pre>
+    </div>
+    <div class="insight">
+      <p><strong>Why GROUP BY here?</strong> Each order can have multiple pizzas in <code>customer_orders</code>, so without grouping, joining to the single-row <code>runner_orders</code> and <code>runner_ratings</code> tables would produce duplicate rows per pizza. <code>GROUP BY</code> collapses them and lets <code>COUNT(pizza_id)</code> give the correct total per order.</p>
+    </div>
+
+    <!-- D5 -->
+    <h2><span class="q-number">D5</span> Net profit after runner costs</h2>
+    <p>Runners are paid $0.30/km. Two CTEs compute total revenue and total runner costs independently, then the outer query subtracts them. Keeping revenue and costs in separate CTEs makes the logic easy to audit and change.</p>
+    <div class="code-block">
+      <div class="code-label">SQL <span>D5</span></div>
+      <pre><span class="kw">WITH</span> revenue <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> pizza_name = <span class="st">'Meatlovers'</span> <span class="kw">THEN</span> <span class="st">12</span> <span class="kw">ELSE</span> <span class="st">10</span> <span class="kw">END</span>) <span class="kw">AS</span> total_revenue
+    <span class="kw">FROM</span> customer_orders <span class="kw">AS</span> cust
+    <span class="kw">JOIN</span> runner_orders  <span class="kw">AS</span> runna <span class="kw">ON</span> cust.order_id = runna.order_id
+    <span class="kw">JOIN</span> pizza_names    <span class="kw">AS</span> pizza <span class="kw">ON</span> cust.pizza_id  = pizza.pizza_id
+    <span class="kw">WHERE</span> distance != <span class="st">0</span>
+),
+costs <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="fn">SUM</span>(distance * <span class="st">0.3</span>) <span class="kw">AS</span> runner_costs
+    <span class="kw">FROM</span> runner_orders
+    <span class="kw">WHERE</span> distance != <span class="st">0</span>
+)
+<span class="kw">SELECT</span>
+    total_revenue                       <span class="kw">AS</span> gross_revenue,
+    runner_costs                        <span class="kw">AS</span> total_runner_costs,
+    total_revenue - runner_costs        <span class="kw">AS</span> net_profit
+<span class="kw">FROM</span> revenue, costs;</pre>
+    </div>
+    <div class="insight">
+      <p><strong>Multi-CTE arithmetic</strong> — separating revenue and cost into their own CTEs keeps each calculation independently testable. You can run either CTE alone to verify it before combining. This pattern scales cleanly when you add more cost/revenue lines later.</p>
+    </div>
+
     <h2>What This Case Study Tests</h2>
     <p>Pizza Runner is genuinely harder than Danny's Diner — not because the questions are more complex in isolation, but because the data is intentionally messy. Before you can answer anything meaningfully you have to fix it. That's closer to real work than most SQL challenges.</p>
-    <p>The three skills this case study sharpens: <strong>dirty data diagnosis</strong> (spotting the 'null' string vs SQL NULL problem before your queries silently give wrong answers), <strong>datetime arithmetic</strong> using <code>EXTRACT(EPOCH FROM ...)</code>, and <strong>string normalisation</strong> — exploding comma-separated columns with <code>regexp_split_to_table</code> and reassembling them with <code>STRING_AGG</code>. These patterns appear constantly in production pipelines.</p>
+    <p>Across all four sections the key skills are: <strong>dirty data diagnosis</strong> (spotting the 'null' string vs SQL NULL problem), <strong>datetime arithmetic</strong> with <code>EXTRACT(EPOCH FROM ...)</code>, <strong>string normalisation</strong> using <code>regexp_split_to_table</code> and <code>STRING_AGG</code>, and <strong>multi-CTE financial modelling</strong> for clean revenue/cost separation.</p>
     <p>C5 and C6 (alphabetical ingredient lists with 2x prefixes) are still in progress — coming in the next update.</p>
 
   </article>
