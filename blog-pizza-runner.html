@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>8-Week SQL Challenge: Pizza Runner — Suyash Mhetre</title>
-  <meta name="description" content="A complete walkthrough of the Pizza Runner SQL case study — dirty data cleaning, datetime arithmetic, regex, and string aggregation across three sections." />
+  <title>8-Week SQL Challenge: Pizza Runner - Suyash Mhetre</title>
+  <meta name="description" content="A complete walkthrough of the Pizza Runner SQL case study - dirty data cleaning, datetime arithmetic, regex, and string aggregation across three sections." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -248,7 +248,7 @@
         8 Week SQL Challenge · Case Study #2
       </div>
       <h1 class="post-title">Pizza Runner:<br>Dirty Data &amp; Real-World SQL</h1>
-      <p class="post-subtitle">Three sections of increasingly complex SQL — from simple aggregations to datetime arithmetic, regex-based data cleaning, and string aggregation for dynamic order labels.</p>
+      <p class="post-subtitle">Three sections of increasingly complex SQL - from simple aggregations to datetime arithmetic, regex-based data cleaning, and string aggregation for dynamic order labels.</p>
       <div class="post-meta">
         <span class="meta-tag accent">SQL</span>
         <span class="meta-tag accent">PostgreSQL</span>
@@ -270,11 +270,11 @@
   <article class="post-body">
 
     <h2 class="section-heading" id="section-a">Section A: Pizza Metrics</h2>
-    <p class="section-sub">10 questions covering order volumes, customer behaviour, and delivery filtering. The main challenge: the raw data has inconsistent nulls — the string <code>'null'</code> mixed with actual SQL <code>NULL</code>, and dirty whitespace. Every query that touches <code>runner_orders</code> needs a filter to exclude cancelled orders.</p>
+    <p class="section-sub">10 questions covering order volumes, customer behaviour, and delivery filtering. The main challenge: the raw data has inconsistent nulls - the string <code>'null'</code> mixed with actual SQL <code>NULL</code>, and dirty whitespace. Every query that touches <code>runner_orders</code> needs a filter to exclude cancelled orders.</p>
 
     <!-- A1 -->
     <h2><span class="q-number">A1</span> How many pizzas were ordered?</h2>
-    <p>A direct row count on <code>customer_orders</code> — each row is one pizza ordered, regardless of cancellation.</p>
+    <p>A direct row count on <code>customer_orders</code> - each row is one pizza ordered, regardless of cancellation.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A1</span></div>
       <pre><span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> customer_orders;</pre>
@@ -298,7 +298,7 @@
 
     <!-- A3 -->
     <h2><span class="q-number">A3</span> Successful deliveries per runner</h2>
-    <p>The dataset stores cancelled orders as the string <code>'null'</code> in the <code>duration</code> column — not a real SQL NULL. Filtering <code>WHERE duration &lt;&gt; 'null'</code> catches this.</p>
+    <p>The dataset stores cancelled orders as the string <code>'null'</code> in the <code>duration</code> column - not a real SQL NULL. Filtering <code>WHERE duration &lt;&gt; 'null'</code> catches this.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A3</span></div>
       <pre><span class="kw">SELECT</span>
@@ -315,7 +315,7 @@
     </div>
 
     <!-- A4 -->
-    <h2><span class="q-number">A4</span> Pizza type breakdown — delivered only</h2>
+    <h2><span class="q-number">A4</span> Pizza type breakdown - delivered only</h2>
     <p>Join three tables, filter to delivered orders, count by pizza name.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A4</span></div>
@@ -335,7 +335,7 @@
 
     <!-- A5 -->
     <h2><span class="q-number">A5</span> Vegetarian vs Meatlovers per customer</h2>
-    <p>Join <code>customer_orders</code> to <code>pizza_names</code>, then group by customer and pizza type. This includes undelivered orders — the question asks for "ordered", not "delivered".</p>
+    <p>Join <code>customer_orders</code> to <code>pizza_names</code>, then group by customer and pizza type. This includes undelivered orders - the question asks for "ordered", not "delivered".</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A5</span></div>
       <pre><span class="kw">WITH</span> orders <span class="kw">AS</span> (
@@ -372,7 +372,7 @@
 
     <!-- A7 -->
     <h2><span class="q-number">A7</span> Pizzas with changes vs no changes</h2>
-    <p>This one requires careful null handling. Both an empty string <code>' '</code> and the string <code>'null'</code> mean "no exclusions/extras" — we need to treat both as absent. Conditional aggregation via <code>SUM(CASE WHEN ...)</code> handles the per-customer split in one pass.</p>
+    <p>This one requires careful null handling. Both an empty string <code>' '</code> and the string <code>'null'</code> mean "no exclusions/extras" - we need to treat both as absent. Conditional aggregation via <code>SUM(CASE WHEN ...)</code> handles the per-customer split in one pass.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A7</span></div>
       <pre><span class="kw">SELECT</span>
@@ -391,12 +391,12 @@
 <span class="kw">GROUP BY</span> <span class="st">1</span>;</pre>
     </div>
     <div class="insight">
-      <p><strong>Pattern:</strong> <code>SUM(CASE WHEN condition THEN 1 ELSE 0 END)</code> is a pivot-in-place — it lets you count multiple conditional buckets in a single query pass without a separate subquery per condition.</p>
+      <p><strong>Pattern:</strong> <code>SUM(CASE WHEN condition THEN 1 ELSE 0 END)</code> is a pivot-in-place - it lets you count multiple conditional buckets in a single query pass without a separate subquery per condition.</p>
     </div>
 
     <!-- A8 -->
     <h2><span class="q-number">A8</span> Pizzas with both exclusions AND extras</h2>
-    <p>Stricter version of A7 — both columns must be non-null and non-empty. Uses AND between the two conditions rather than OR.</p>
+    <p>Stricter version of A7 - both columns must be non-null and non-empty. Uses AND between the two conditions rather than OR.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>A8</span></div>
       <pre><span class="kw">SELECT</span> <span class="fn">COUNT</span>(cust.order_id)
@@ -423,9 +423,9 @@
 
     <!-- A10 -->
     <h2><span class="q-number">A10</span> Order volume by day of week</h2>
-    <p>Two approaches: <code>EXTRACT(DOW ...)</code> returns a numeric 0–6 (Sunday = 0). <code>TO_CHAR(..., 'DAY')</code> returns the human-readable name — better for a report but harder to sort correctly.</p>
+    <p>Two approaches: <code>EXTRACT(DOW ...)</code> returns a numeric 0–6 (Sunday = 0). <code>TO_CHAR(..., 'DAY')</code> returns the human-readable name - better for a report but harder to sort correctly.</p>
     <div class="code-block">
-      <div class="code-label">SQL <span>A10 — readable version</span></div>
+      <div class="code-label">SQL <span>A10 - readable version</span></div>
       <pre><span class="kw">SELECT</span>
     <span class="fn">TO_CHAR</span>(order_time, <span class="st">'DAY'</span>) <span class="kw">AS</span> day_of_week,
     <span class="fn">COUNT</span>(order_id) <span class="kw">AS</span> n_orders
@@ -436,7 +436,7 @@
 
     <!-- SECTION B -->
     <h2 class="section-heading" id="section-b">Section B: Runner &amp; Customer Experience</h2>
-    <p class="section-sub">7 questions focused on delivery operations — pickup times, distances, speeds, and success rates. This section required the most data cleaning: <code>ALTER TABLE</code> and <code>UPDATE</code> to strip non-numeric characters from <code>duration</code> and <code>distance</code> before any arithmetic was possible.</p>
+    <p class="section-sub">7 questions focused on delivery operations - pickup times, distances, speeds, and success rates. This section required the most data cleaning: <code>ALTER TABLE</code> and <code>UPDATE</code> to strip non-numeric characters from <code>duration</code> and <code>distance</code> before any arithmetic was possible.</p>
 
     <!-- B1 -->
     <h2><span class="q-number">B1</span> Runners signed up per week</h2>
@@ -452,9 +452,9 @@
 
     <!-- B2 -->
     <h2><span class="q-number">B2</span> Average runner pickup time</h2>
-    <p>First the data had to be cleaned — <code>duration</code> stored values like <code>'32 minutes'</code> and <code>'null'</code> strings. After stripping non-numeric characters with <code>regexp_replace</code> and casting to <code>INTEGER</code>, the pickup time was computed using <code>EXTRACT(EPOCH FROM ...)</code> to get seconds, then dividing by 60 for minutes.</p>
+    <p>First the data had to be cleaned - <code>duration</code> stored values like <code>'32 minutes'</code> and <code>'null'</code> strings. After stripping non-numeric characters with <code>regexp_replace</code> and casting to <code>INTEGER</code>, the pickup time was computed using <code>EXTRACT(EPOCH FROM ...)</code> to get seconds, then dividing by 60 for minutes.</p>
     <div class="code-block">
-      <div class="code-label">SQL <span>B2 — data cleaning</span></div>
+      <div class="code-label">SQL <span>B2 - data cleaning</span></div>
       <pre><span class="cm">-- Strip non-numeric characters from duration</span>
 <span class="kw">UPDATE</span> runner_orders
 <span class="kw">SET</span> duration = <span class="fn">regexp_replace</span>(duration, <span class="st">'[^0-9]'</span>, <span class="st">''</span>, <span class="st">'g'</span>)
@@ -466,7 +466,7 @@
 <span class="kw">ALTER COLUMN</span> duration <span class="kw">TYPE INTEGER USING</span> duration::INTEGER;</pre>
     </div>
     <div class="code-block">
-      <div class="code-label">SQL <span>B2 — average pickup time</span></div>
+      <div class="code-label">SQL <span>B2 - average pickup time</span></div>
       <pre><span class="kw">SELECT</span>
     runna.runner_id,
     <span class="fn">ROUND</span>(<span class="fn">AVG</span>(
@@ -481,7 +481,7 @@
 <span class="kw">GROUP BY</span> <span class="st">1</span>;</pre>
     </div>
     <div class="insight">
-      <p><strong>Datetime arithmetic:</strong> <code>EXTRACT(EPOCH FROM (ts2 - ts1))</code> gives the difference in seconds — divide by 60 for minutes, 3600 for hours. Much cleaner than <code>DATEDIFF</code> equivalents in other databases.</p>
+      <p><strong>Datetime arithmetic:</strong> <code>EXTRACT(EPOCH FROM (ts2 - ts1))</code> gives the difference in seconds - divide by 60 for minutes, 3600 for hours. Much cleaner than <code>DATEDIFF</code> equivalents in other databases.</p>
     </div>
 
     <!-- B3 -->
@@ -520,9 +520,9 @@
 
     <!-- B4 -->
     <h2><span class="q-number">B4</span> Average distance per customer</h2>
-    <p>Similar cleaning needed on <code>distance</code> — values like <code>'20km'</code> and <code>'null'</code>. After stripping and casting, values that were stored as integers (e.g. <code>200</code> instead of <code>20.0</code>) were scaled back by dividing by 10.</p>
+    <p>Similar cleaning needed on <code>distance</code> - values like <code>'20km'</code> and <code>'null'</code>. After stripping and casting, values that were stored as integers (e.g. <code>200</code> instead of <code>20.0</code>) were scaled back by dividing by 10.</p>
     <div class="code-block">
-      <div class="code-label">SQL <span>B4 — query</span></div>
+      <div class="code-label">SQL <span>B4 - query</span></div>
       <pre><span class="kw">SELECT</span>
     cust.customer_id,
     <span class="fn">ROUND</span>(<span class="fn">AVG</span>(runna.distance)) <span class="kw">AS</span> avg_distance_km
@@ -548,7 +548,7 @@
 
     <!-- B6 -->
     <h2><span class="q-number">B6</span> Average speed per runner per delivery</h2>
-    <p>Speed = distance ÷ duration (in hours). Multiply duration in minutes by <code>60</code> to convert to km/h. Per-delivery breakdown lets you spot outliers — one runner had an unusually high speed on a specific order worth investigating.</p>
+    <p>Speed = distance ÷ duration (in hours). Multiply duration in minutes by <code>60</code> to convert to km/h. Per-delivery breakdown lets you spot outliers - one runner had an unusually high speed on a specific order worth investigating.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>B6</span></div>
       <pre><span class="kw">SELECT</span>
@@ -563,7 +563,7 @@
 
     <!-- B7 -->
     <h2><span class="q-number">B7</span> Successful delivery percentage per runner</h2>
-    <p>CTE first computes success and fail counts per runner using conditional aggregation, then the outer query divides to get the percentage. Integer division is intentional — matches the expected output.</p>
+    <p>CTE first computes success and fail counts per runner using conditional aggregation, then the outer query divides to get the percentage. Integer division is intentional - matches the expected output.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>B7</span></div>
       <pre><span class="kw">WITH</span> delivery <span class="kw">AS</span> (
@@ -582,13 +582,13 @@
 
     <!-- SECTION C -->
     <h2 class="section-heading" id="section-c">Section C: Ingredient Optimisation</h2>
-    <p class="section-sub">The hardest section — normalising comma-separated strings into rows, pivoting with <code>regexp_split_to_table</code>, and assembling dynamic order labels with <code>STRING_AGG</code>. Required two temp tables to make the data queryable at all.</p>
+    <p class="section-sub">The hardest section - normalising comma-separated strings into rows, pivoting with <code>regexp_split_to_table</code>, and assembling dynamic order labels with <code>STRING_AGG</code>. Required two temp tables to make the data queryable at all.</p>
 
     <!-- C0 -->
     <h2><span class="q-number">C0</span> Data Cleaning First</h2>
-    <p>Both <code>pizza_recipes.toppings</code> and <code>customer_orders.extras/exclusions</code> store comma-separated lists in a single column — the classic anti-pattern. To query them meaningfully, they need to be exploded into one-row-per-value using <code>regexp_split_to_table</code>.</p>
+    <p>Both <code>pizza_recipes.toppings</code> and <code>customer_orders.extras/exclusions</code> store comma-separated lists in a single column - the classic anti-pattern. To query them meaningfully, they need to be exploded into one-row-per-value using <code>regexp_split_to_table</code>.</p>
     <div class="code-block">
-      <div class="code-label">SQL <span>C0 — pivot recipes to long format</span></div>
+      <div class="code-label">SQL <span>C0 - pivot recipes to long format</span></div>
       <pre><span class="kw">CREATE TEMP TABLE</span> pizza_recipes <span class="kw">AS</span> (
     <span class="kw">SELECT</span>
         pizza_id,
@@ -597,7 +597,7 @@
 );</pre>
     </div>
     <div class="code-block">
-      <div class="code-label">SQL <span>C0 — pivot extras &amp; exclusions</span></div>
+      <div class="code-label">SQL <span>C0 - pivot extras &amp; exclusions</span></div>
       <pre><span class="kw">CREATE TEMP TABLE</span> customer_order <span class="kw">AS</span> (
     <span class="kw">WITH</span> cleaned <span class="kw">AS</span> (
         <span class="kw">SELECT</span>
@@ -617,7 +617,7 @@
 );</pre>
     </div>
     <div class="insight">
-      <p><strong><code>NULLIF(NULLIF(TRIM(col), 'null'), '')</code></strong> — this double-<code>NULLIF</code> chain is a clean idiom for normalising dirty text columns that mix blank strings, the word 'null', and real NULLs into a single consistent NULL before further processing.</p>
+      <p><strong><code>NULLIF(NULLIF(TRIM(col), 'null'), '')</code></strong> - this double-<code>NULLIF</code> chain is a clean idiom for normalising dirty text columns that mix blank strings, the word 'null', and real NULLs into a single consistent NULL before further processing.</p>
     </div>
 
     <!-- C1 -->
@@ -704,15 +704,15 @@ split_orders <span class="kw">AS</span> (
 <span class="kw">ORDER BY</span> b.order_id;</pre>
     </div>
     <div class="insight">
-      <p><strong><code>STRING_AGG(DISTINCT ..., ', ')</code> + <code>COALESCE(prefix || agg, '')</code></strong> — this combination is the standard way to build dynamic comma-separated labels in PostgreSQL. <code>COALESCE</code> suppresses the prefix entirely when there are no values, so you never get "Meat Lovers - Exclude " with a trailing empty clause.</p>
+      <p><strong><code>STRING_AGG(DISTINCT ..., ', ')</code> + <code>COALESCE(prefix || agg, '')</code></strong> - this combination is the standard way to build dynamic comma-separated labels in PostgreSQL. <code>COALESCE</code> suppresses the prefix entirely when there are no values, so you never get "Meat Lovers - Exclude " with a trailing empty clause.</p>
     </div>
 
     <!-- SECTION D -->
     <h2 class="section-heading" id="section-d">Section D: Pricing &amp; Ratings</h2>
-    <p class="section-sub">5 questions on revenue calculation, surcharge logic, schema design, and net profit after runner costs. This section combines conditional aggregation with multi-CTE arithmetic — and includes a schema design question that has no single right answer.</p>
+    <p class="section-sub">5 questions on revenue calculation, surcharge logic, schema design, and net profit after runner costs. This section combines conditional aggregation with multi-CTE arithmetic - and includes a schema design question that has no single right answer.</p>
 
     <!-- D1 -->
-    <h2><span class="q-number">D1</span> Total revenue — no delivery fees, no extras charge</h2>
+    <h2><span class="q-number">D1</span> Total revenue - no delivery fees, no extras charge</h2>
     <p>Fixed prices: Meatlovers = $12, Vegetarian = $10. Join to get the pizza name, filter to delivered orders only (<code>distance != 0</code>), and use <code>CASE WHEN</code> inside <code>SUM</code> to apply the right price per row.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>D1</span></div>
@@ -732,7 +732,7 @@ split_orders <span class="kw">AS</span> (
 
     <!-- D2 -->
     <h2><span class="q-number">D2</span> Revenue with $1 surcharge per extra topping</h2>
-    <p>Now extras cost $1 each. The trick is counting the number of items in the comma-separated <code>extras</code> string — <code>array_length(string_to_array(extras, ','), 1)</code> gives the count. The <code>NULLIF</code> chain first normalises empty/null extras to NULL so they don't get counted.</p>
+    <p>Now extras cost $1 each. The trick is counting the number of items in the comma-separated <code>extras</code> string - <code>array_length(string_to_array(extras, ','), 1)</code> gives the count. The <code>NULLIF</code> chain first normalises empty/null extras to NULL so they don't get counted.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>D2</span></div>
       <pre><span class="kw">WITH</span> orders <span class="kw">AS</span> (
@@ -754,14 +754,14 @@ split_orders <span class="kw">AS</span> (
 <span class="kw">FROM</span> orders;</pre>
     </div>
     <div class="insight">
-      <p><strong><code>array_length(string_to_array(col, ','), 1)</code></strong> — the cleanest way to count comma-separated items in PostgreSQL without exploding rows. <code>string_to_array</code> splits the string into an array; <code>array_length(..., 1)</code> returns the length of the first dimension.</p>
+      <p><strong><code>array_length(string_to_array(col, ','), 1)</code></strong> - the cleanest way to count comma-separated items in PostgreSQL without exploding rows. <code>string_to_array</code> splits the string into an array; <code>array_length(..., 1)</code> returns the length of the first dimension.</p>
     </div>
 
     <!-- D3 -->
     <h2><span class="q-number">D3</span> Design a runner ratings table</h2>
-    <p>This is a schema design question — there's no single right answer, but the key constraints are: one rating per successful order, rating between 1 and 5, and it should join cleanly to <code>runner_orders</code> on <code>order_id</code>.</p>
+    <p>This is a schema design question - there's no single right answer, but the key constraints are: one rating per successful order, rating between 1 and 5, and it should join cleanly to <code>runner_orders</code> on <code>order_id</code>.</p>
     <div class="code-block">
-      <div class="code-label">SQL <span>D3 — schema + sample data</span></div>
+      <div class="code-label">SQL <span>D3 - schema + sample data</span></div>
       <pre><span class="kw">CREATE TABLE</span> runner_ratings (
     rating_id     SERIAL        <span class="kw">PRIMARY KEY</span>,
     order_id      INTEGER       <span class="kw">NOT NULL</span>,
@@ -783,11 +783,11 @@ split_orders <span class="kw">AS</span> (
     (<span class="st">8</span>,  <span class="st">2</span>, <span class="st">102</span>, <span class="st">4</span>),
     (<span class="st">10</span>, <span class="st">1</span>, <span class="st">104</span>, <span class="st">5</span>);</pre>
     </div>
-    <p>The <code>CHECK (rating BETWEEN 1 AND 5)</code> constraint enforces valid ratings at the database level — no application-side validation needed. Orders 6 and 9 are excluded as they were cancelled.</p>
+    <p>The <code>CHECK (rating BETWEEN 1 AND 5)</code> constraint enforces valid ratings at the database level - no application-side validation needed. Orders 6 and 9 are excluded as they were cancelled.</p>
 
     <!-- D4 -->
     <h2><span class="q-number">D4</span> Full delivery summary table</h2>
-    <p>Join everything together: customer info, runner info, rating, timing, speed, and pizza count per order — one row per successful delivery.</p>
+    <p>Join everything together: customer info, runner info, rating, timing, speed, and pizza count per order - one row per successful delivery.</p>
     <div class="code-block">
       <div class="code-label">SQL <span>D4</span></div>
       <pre><span class="kw">SELECT</span>
@@ -845,13 +845,13 @@ costs <span class="kw">AS</span> (
 <span class="kw">FROM</span> revenue, costs;</pre>
     </div>
     <div class="insight">
-      <p><strong>Multi-CTE arithmetic</strong> — separating revenue and cost into their own CTEs keeps each calculation independently testable. You can run either CTE alone to verify it before combining. This pattern scales cleanly when you add more cost/revenue lines later.</p>
+      <p><strong>Multi-CTE arithmetic</strong> - separating revenue and cost into their own CTEs keeps each calculation independently testable. You can run either CTE alone to verify it before combining. This pattern scales cleanly when you add more cost/revenue lines later.</p>
     </div>
 
     <h2>What This Case Study Tests</h2>
-    <p>Pizza Runner is genuinely harder than Danny's Diner — not because the questions are more complex in isolation, but because the data is intentionally messy. Before you can answer anything meaningfully you have to fix it. That's closer to real work than most SQL challenges.</p>
+    <p>Pizza Runner is genuinely harder than Danny's Diner - not because the questions are more complex in isolation, but because the data is intentionally messy. Before you can answer anything meaningfully you have to fix it. That's closer to real work than most SQL challenges.</p>
     <p>Across all four sections the key skills are: <strong>dirty data diagnosis</strong> (spotting the 'null' string vs SQL NULL problem), <strong>datetime arithmetic</strong> with <code>EXTRACT(EPOCH FROM ...)</code>, <strong>string normalisation</strong> using <code>regexp_split_to_table</code> and <code>STRING_AGG</code>, and <strong>multi-CTE financial modelling</strong> for clean revenue/cost separation.</p>
-    <p>C5 and C6 (alphabetical ingredient lists with 2x prefixes) are still in progress — coming in the next update.</p>
+    <p>C5 and C6 (alphabetical ingredient lists with 2x prefixes) are still in progress - coming in the next update.</p>
 
   </article>
 

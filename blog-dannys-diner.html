@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>8-Week SQL Challenge: Danny's Diner — Suyash Mhetre</title>
-  <meta name="description" content="A walkthrough of the Danny's Diner SQL case study from the 8 Week SQL Challenge — covering CTEs, window functions, and real-world querying patterns." />
+  <title>8-Week SQL Challenge: Danny's Diner - Suyash Mhetre</title>
+  <meta name="description" content="A walkthrough of the Danny's Diner SQL case study from the 8 Week SQL Challenge - covering CTEs, window functions, and real-world querying patterns." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -360,7 +360,7 @@
         8 Week SQL Challenge · Case Study #1
       </div>
       <h1 class="post-title">Danny's Diner:<br>SQL From First Principles</h1>
-      <p class="post-subtitle">A complete walkthrough of Case Study #1 — covering CTEs, window functions, conditional aggregation, and the querying patterns that show up again and again in production data work.</p>
+      <p class="post-subtitle">A complete walkthrough of Case Study #1 - covering CTEs, window functions, conditional aggregation, and the querying patterns that show up again and again in production data work.</p>
       <div class="post-meta">
         <span class="meta-tag accent">SQL</span>
         <span class="meta-tag accent">PostgreSQL</span>
@@ -376,12 +376,12 @@
 
     <h2>The Setup</h2>
 
-    <p>Danny's Diner is a small Japanese restaurant with three items on the menu — sushi, curry, and ramen. Danny wants to understand his customers: who visits most, what they order, how the loyalty program is performing, and whether it's actually worth running.</p>
+    <p>Danny's Diner is a small Japanese restaurant with three items on the menu - sushi, curry, and ramen. Danny wants to understand his customers: who visits most, what they order, how the loyalty program is performing, and whether it's actually worth running.</p>
 
-    <p>The schema is intentionally minimal — three tables (<strong>sales</strong>, <strong>menu</strong>, <strong>members</strong>) — but the questions get surprisingly layered quickly. That's what makes this case study a good benchmark: simple data, non-trivial logic.</p>
+    <p>The schema is intentionally minimal - three tables (<strong>sales</strong>, <strong>menu</strong>, <strong>members</strong>) - but the questions get surprisingly layered quickly. That's what makes this case study a good benchmark: simple data, non-trivial logic.</p>
 
     <div class="insight">
-      <p><strong>Why this matters beyond the challenge:</strong> These exact patterns — joining on inequality conditions, ranking within groups, conditional point systems — show up constantly in real production work. I use variations of Q6 and Q10 logic weekly in financial model monitoring at Zions.</p>
+      <p><strong>Why this matters beyond the challenge:</strong> These exact patterns - joining on inequality conditions, ranking within groups, conditional point systems - show up constantly in real production work. I use variations of Q6 and Q10 logic weekly in financial model monitoring at Zions.</p>
     </div>
 
     <!-- Q1 -->
@@ -415,7 +415,7 @@
     <!-- Q2 -->
     <h2><span class="q-number">2</span> How Many Days Did Each Customer Visit?</h2>
 
-    <p>The key here is <code>DISTINCT order_date</code> — a customer can place multiple orders on the same day and we want to count that as one visit.</p>
+    <p>The key here is <code>DISTINCT order_date</code> - a customer can place multiple orders on the same day and we want to count that as one visit.</p>
 
     <div class="code-block">
       <div class="code-label">SQL <span>Question 2</span></div>
@@ -435,12 +435,12 @@
       </tbody>
     </table>
 
-    <p>B visits most frequently despite spending almost the same as A — meaning B spends less per visit. C is a very infrequent customer.</p>
+    <p>B visits most frequently despite spending almost the same as A - meaning B spends less per visit. C is a very infrequent customer.</p>
 
     <!-- Q3 -->
     <h2><span class="q-number">3</span> First Item Purchased by Each Customer</h2>
 
-    <p>This is the first window function problem. We rank each customer's orders by date and pull rank = 1. I used <code>ROW_NUMBER()</code> here — if two orders share the earliest date, this picks one arbitrarily. <code>DENSE_RANK()</code> would surface both ties.</p>
+    <p>This is the first window function problem. We rank each customer's orders by date and pull rank = 1. I used <code>ROW_NUMBER()</code> here - if two orders share the earliest date, this picks one arbitrarily. <code>DENSE_RANK()</code> would surface both ties.</p>
 
     <div class="code-block">
       <div class="code-label">SQL <span>Question 3</span></div>
@@ -485,12 +485,12 @@
 <span class="kw">LIMIT</span> <span class="st">1</span>;</pre>
     </div>
 
-    <p>Ramen is the most purchased item — which also informs the loyalty program design in Q9 and Q10.</p>
+    <p>Ramen is the most purchased item - which also informs the loyalty program design in Q9 and Q10.</p>
 
     <!-- Q5 -->
     <h2><span class="q-number">5</span> Most Popular Item Per Customer</h2>
 
-    <p>Now we want the favourite per customer, not overall. This calls for <code>RANK()</code> rather than <code>ROW_NUMBER()</code> — if a customer ordered two items equally often, we want both to show up (rank 1 tie), not just one.</p>
+    <p>Now we want the favourite per customer, not overall. This calls for <code>RANK()</code> rather than <code>ROW_NUMBER()</code> - if a customer ordered two items equally often, we want both to show up (rank 1 tie), not just one.</p>
 
     <div class="code-block">
       <div class="code-label">SQL <span>Question 5</span></div>
@@ -522,7 +522,7 @@
     <!-- Q6 -->
     <h2><span class="q-number">6</span> First Purchase After Becoming a Member</h2>
 
-    <p>This is where the <code>members</code> table comes in. The join condition is the key — we filter to orders on or after the join date using an inequality in the <code>ON</code> clause, then rank within each customer to find their first post-membership order.</p>
+    <p>This is where the <code>members</code> table comes in. The join condition is the key - we filter to orders on or after the join date using an inequality in the <code>ON</code> clause, then rank within each customer to find their first post-membership order.</p>
 
     <div class="code-block">
       <div class="code-label">SQL <span>Question 6</span></div>
@@ -546,7 +546,7 @@
 <span class="kw">WHERE</span> rnk = <span class="st">1</span>;</pre>
     </div>
 
-    <p>The inequality join (<code>order_date >= join_date</code>) is a pattern I find comes up constantly in financial work — filtering events to a specific time window relative to a reference date per entity.</p>
+    <p>The inequality join (<code>order_date >= join_date</code>) is a pattern I find comes up constantly in financial work - filtering events to a specific time window relative to a reference date per entity.</p>
 
     <!-- Q7 -->
     <h2><span class="q-number">7</span> Last Purchase Before Becoming a Member</h2>
@@ -579,7 +579,7 @@
     <!-- Q8 -->
     <h2><span class="q-number">8</span> Total Items and Spend Before Membership</h2>
 
-    <p>Aggregate version of Q7 — instead of finding the last item, we want the total count and spend across all pre-membership orders. No window function needed; a straight aggregation after the filtered join does it.</p>
+    <p>Aggregate version of Q7 - instead of finding the last item, we want the total count and spend across all pre-membership orders. No window function needed; a straight aggregation after the filtered join does it.</p>
 
     <div class="code-block">
       <div class="code-label">SQL <span>Question 8</span></div>
@@ -597,7 +597,7 @@
     </div>
 
     <!-- Q9 -->
-    <h2><span class="q-number">9</span> Points Calculation — Sushi 2× Multiplier</h2>
+    <h2><span class="q-number">9</span> Points Calculation - Sushi 2× Multiplier</h2>
 
     <p>Here's where <code>CASE WHEN</code> inside an aggregate becomes essential. The rule: $1 = 10 points, sushi = 2× multiplier. The CASE evaluates per row before SUM collapses them.</p>
 
@@ -619,7 +619,7 @@
     </div>
 
     <div class="insight">
-      <p><strong>Pattern to remember:</strong> <code>SUM(CASE WHEN ... THEN ... ELSE ... END)</code> is conditional aggregation. It's the SQL equivalent of a weighted sum — you'll reach for this constantly in any analytics or reporting context.</p>
+      <p><strong>Pattern to remember:</strong> <code>SUM(CASE WHEN ... THEN ... ELSE ... END)</code> is conditional aggregation. It's the SQL equivalent of a weighted sum - you'll reach for this constantly in any analytics or reporting context.</p>
     </div>
 
     <!-- Q10 -->
@@ -659,7 +659,7 @@
     </div>
 
     <div class="insight">
-      <p><strong>Order of CASE matters.</strong> SQL evaluates CASE conditions top to bottom and stops at the first match. The first-week check has to come before the sushi check — otherwise a sushi order in the first week would match the sushi branch (2×) instead of the first-week branch (also 2×, but by the right rule). In this case the result is the same, but getting the logic order right matters when multipliers differ.</p>
+      <p><strong>Order of CASE matters.</strong> SQL evaluates CASE conditions top to bottom and stops at the first match. The first-week check has to come before the sushi check - otherwise a sushi order in the first week would match the sushi branch (2×) instead of the first-week branch (also 2×, but by the right rule). In this case the result is the same, but getting the logic order right matters when multipliers differ.</p>
     </div>
 
     <!-- TAKEAWAYS -->
@@ -667,15 +667,15 @@
 
     <p>Working through all 10 questions, a small set of patterns accounts for almost every solution:</p>
 
-    <p><strong>CTE + window function:</strong> Filter to a group's first/last row. Used in Q3, Q5, Q6, Q7. The template is always the same — rank in a CTE, filter on rank = 1 in the outer query.</p>
+    <p><strong>CTE + window function:</strong> Filter to a group's first/last row. Used in Q3, Q5, Q6, Q7. The template is always the same - rank in a CTE, filter on rank = 1 in the outer query.</p>
 
     <p><strong>Inequality join:</strong> Joining two tables where the match condition is a range, not equality. <code>order_date >= join_date</code> in Q6–Q8. This is how you attach a time-dependent reference point (membership date, loan origination, pricing effective date) to event-level data.</p>
 
-    <p><strong>Conditional aggregation:</strong> <code>SUM(CASE WHEN ... THEN ... END)</code> in Q9 and Q10. Any time your metric has multiple rules depending on a row attribute, this is the right tool — not separate queries per segment.</p>
+    <p><strong>Conditional aggregation:</strong> <code>SUM(CASE WHEN ... THEN ... END)</code> in Q9 and Q10. Any time your metric has multiple rules depending on a row attribute, this is the right tool - not separate queries per segment.</p>
 
     <p>These three patterns together cover the vast majority of real analytical SQL work. Master them here, and you'll recognize them instantly in production contexts.</p>
 
-    <p>Full solutions are on my <a href="https://github.com/suyash07" target="_blank">GitHub</a>. Next up: Case Study #2 — Pizza Runner.</p>
+    <p>Full solutions are on my <a href="https://github.com/suyash07" target="_blank">GitHub</a>. Next up: Case Study #2 - Pizza Runner.</p>
 
   </article>
 
