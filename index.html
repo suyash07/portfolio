@@ -1117,17 +1117,20 @@
         <div class="project-header">
           <div class="project-icon">🚕</div>
           <div class="project-links">
+            <a href="blog-uber-surge.html" class="project-link">Read ↗</a>
             <a href="https://github.com/suyash07" class="project-link" target="_blank">GitHub ↗</a>
           </div>
         </div>
         <div class="status-badge">Personal Project · 2026</div>
         <div class="project-title">NYC Ride Demand Forecasting and Surge Pricing</div>
-        <div class="project-desc">Random forest forecasting hourly Uber/Lyft demand by NYC taxi zone from 3M+ trips using temporal, weather, and lagged-demand features. Gradient boosting classifier predicts surge-priced trips with labels from fare-per-mile vs. hourly zone medians above 1.5x. GCP dashboard in progress.</div>
+        <div class="project-desc">Two-part study on 36M+ NYC TLC trips (Jan–Feb 2023). A random forest forecasts hourly ride demand by taxi zone from temporal, weather, and lagged-demand features. A surge classifier labels a trip as surge when its fare exceeds 1.5× an expected-fare model (distance + time), then benchmarks a logistic baseline against an Optuna-tuned XGBoost on a strict time-based split — reaching PR-AUC ~0.19 (~3.6× the 5% base rate). SHAP identifies zone, hour, and recent demand as the top drivers; the honest performance ceiling is the absence of supply-side (driver-availability) data. GCP dashboard in progress.</div>
         <div class="project-stack">
           <span class="stack-tag">Python</span>
           <span class="stack-tag">Random Forest</span>
           <span class="stack-tag">scikit-learn</span>
-          <span class="stack-tag">Gradient Boosting</span>
+          <span class="stack-tag">XGBoost</span>
+          <span class="stack-tag">Optuna</span>
+          <span class="stack-tag">SHAP</span>
           <span class="stack-tag">NYC TLC Data</span>
           <span class="stack-tag">GCP</span>
         </div>
